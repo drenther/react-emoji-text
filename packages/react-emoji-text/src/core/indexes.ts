@@ -1,5 +1,5 @@
-import { buildAsciiIndex } from "./ascii";
-import type { CustomEmojiCategory, EmojiData, EmojiEntry, SkinTone } from "./types";
+import { buildAsciiIndex } from './ascii';
+import type { CustomEmojiCategory, EmojiData, EmojiEntry, SkinTone } from './types';
 
 export interface ShortcodeEntry {
   emojiId: string;
@@ -17,13 +17,13 @@ export interface EmojiIndexes {
 
 function unifiedToNative(unified: string): string {
   return unified
-    .split("-")
+    .split('-')
     .map((hex) => String.fromCodePoint(Number.parseInt(hex, 16)))
-    .join("");
+    .join('');
 }
 
 function escapeRegex(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 export function buildIndexes(
@@ -67,8 +67,8 @@ export function buildIndexes(
           name: emoji.name,
           keywords: emoji.keywords ?? [],
           skins: emoji.skins.map((skin) => ({
-            unified: "",
-            native: "",
+            unified: '',
+            native: '',
             src: skin.src,
           })),
         };
@@ -80,7 +80,7 @@ export function buildIndexes(
 
   if (extraAliases) {
     for (const [alias, emojiId] of Object.entries(extraAliases)) {
-      const cleanAlias = alias.replace(/^:|:$/g, "");
+      const cleanAlias = alias.replace(/^:|:$/g, '');
       const resolvedEmojiId = emojiMap.has(emojiId)
         ? emojiId
         : (shortcodeIndex.get(emojiId)?.emojiId ?? emojiId);
@@ -91,7 +91,7 @@ export function buildIndexes(
 
   unicodeChars.sort((first, second) => second.length - first.length);
 
-  const unicodeRegex = unicodeChars.length > 0 ? new RegExp(unicodeChars.join("|"), "y") : /(?!)/y;
+  const unicodeRegex = unicodeChars.length > 0 ? new RegExp(unicodeChars.join('|'), 'y') : /(?!)/y;
 
   const asciiIndex = buildAsciiIndex(data);
 

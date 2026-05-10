@@ -1,16 +1,16 @@
-import { matchAscii } from "./ascii";
-import { type EmojiIndexes, buildIndexes } from "./indexes";
-import { detectSkinToneFromUnified, resolveSkin, skinToneShortcodeToTone } from "./skin";
-import type { SkinTone, Token, TokenizeOptions } from "./types";
+import { matchAscii } from './ascii';
+import { type EmojiIndexes, buildIndexes } from './indexes';
+import { detectSkinToneFromUnified, resolveSkin, skinToneShortcodeToTone } from './skin';
+import type { SkinTone, Token, TokenizeOptions } from './types';
 
 const SHORTCODE_RE = /^:([a-zA-Z0-9_+-]+):/;
 const SKIN_TONE_SHORTCODE_RE = /^:skin-tone-([1-6]):/;
 
 const indexCache = new WeakMap<
-  TokenizeOptions["data"],
+  TokenizeOptions['data'],
   Array<{
-    customEmojis: TokenizeOptions["customEmojis"];
-    extraAliases: TokenizeOptions["extraAliases"];
+    customEmojis: TokenizeOptions['customEmojis'];
+    extraAliases: TokenizeOptions['extraAliases'];
     indexes: EmojiIndexes;
   }>
 >();
@@ -108,12 +108,12 @@ export function tokenize(input: string, options: TokenizeOptions): Token[] {
   const tokens: Token[] = [];
   const ascii = options.ascii ?? true;
   let position = 0;
-  let textBuffer = "";
+  let textBuffer = '';
 
   function flushText() {
     if (textBuffer.length > 0) {
-      tokens.push({ type: "text", value: textBuffer });
-      textBuffer = "";
+      tokens.push({ type: 'text', value: textBuffer });
+      textBuffer = '';
     }
   }
 
@@ -123,17 +123,17 @@ export function tokenize(input: string, options: TokenizeOptions): Token[] {
     const unicodeResult = tryMatchUnicode(input, position, indexes);
     if (unicodeResult) {
       flushText();
-      const detectedSkin = detectSkinToneFromUnified(unicodeResult.unified ?? "");
+      const detectedSkin = detectSkinToneFromUnified(unicodeResult.unified ?? '');
       const emoji = indexes.emojiMap.get(unicodeResult.emojiId);
       if (emoji) {
         const resolved = resolveSkin(emoji, detectedSkin, options.defaultSkin);
         tokens.push({
-          type: "emoji",
+          type: 'emoji',
           emoji,
           native: resolved.native || unicodeResult.native,
           skin: resolved.skin,
           match: unicodeResult.native,
-          source: "unicode",
+          source: 'unicode',
         });
       }
       position += unicodeResult.native.length;
@@ -159,13 +159,13 @@ export function tokenize(input: string, options: TokenizeOptions): Token[] {
           const isCustom = shortcodeResult.isCustom;
           const resolved = resolveSkin(emoji, skinTone, options.defaultSkin);
           tokens.push({
-            type: "emoji",
+            type: 'emoji',
             emoji,
             native: resolved.native,
             skin: resolved.skin,
             shortcode: shortcodeResult.shortcode,
             match: input.slice(position, position + totalLength),
-            source: isCustom ? "custom" : "shortcode",
+            source: isCustom ? 'custom' : 'shortcode',
           });
         }
         position += totalLength;
@@ -178,7 +178,7 @@ export function tokenize(input: string, options: TokenizeOptions): Token[] {
       if (unknownResult) {
         flushText();
         tokens.push({
-          type: "unknown",
+          type: 'unknown',
           shortcode: unknownResult.shortcode,
           match: unknownResult.fullMatch,
         });
@@ -195,11 +195,11 @@ export function tokenize(input: string, options: TokenizeOptions): Token[] {
         if (emoji) {
           const resolved = resolveSkin(emoji, undefined, options.defaultSkin);
           tokens.push({
-            type: "emoji",
+            type: 'emoji',
             emoji,
             native: resolved.native,
             match: asciiResult.ascii,
-            source: "ascii",
+            source: 'ascii',
           });
         }
         position += asciiResult.ascii.length;

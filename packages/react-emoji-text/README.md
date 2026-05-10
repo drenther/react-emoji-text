@@ -5,9 +5,9 @@ A modern React 19 renderer that converts plain text into rendered emojis, backed
 ## Entry Points
 
 ```ts
-import { EmojiProvider, EmojiText } from "react-emoji-text/react";
-import { tokenize } from "react-emoji-text/core";
-import Emoji, { toArray } from "react-emoji-text/compat";
+import { EmojiProvider, EmojiText } from 'react-emoji-text/react';
+import { tokenize } from 'react-emoji-text/core';
+import Emoji, { toArray } from 'react-emoji-text/compat';
 ```
 
 The root entry (`react-emoji-text`) re-exports the core and React APIs. Use the subpath entries when you want the smallest import surface.
@@ -17,8 +17,8 @@ The root entry (`react-emoji-text`) re-exports the core and React APIs. Use the 
 Wrap your app (or subtree) with `EmojiProvider` and use `EmojiText` to render emoji-enriched text.
 
 ```tsx
-import data from "@emoji-mart/data";
-import { EmojiProvider, EmojiText } from "react-emoji-text/react";
+import data from '@emoji-mart/data';
+import { EmojiProvider, EmojiText } from 'react-emoji-text/react';
 
 export function Message() {
   return (
@@ -85,7 +85,7 @@ The `EmojiText.Emoji` slot receives an `EmojiToken` with fields: `emoji`, `nativ
 For full control over every token type, compose the `useTokens` hook with `renderTokenDefault`:
 
 ```tsx
-import { useTokens, renderTokenDefault } from "react-emoji-text/react";
+import { useTokens, renderTokenDefault } from 'react-emoji-text/react';
 
 function CustomRenderer({ text }: { text: string }) {
   const tokens = useTokens(text);
@@ -93,14 +93,14 @@ function CustomRenderer({ text }: { text: string }) {
   return (
     <span>
       {tokens.map((token, index) => {
-        if (token.type === "emoji") {
+        if (token.type === 'emoji') {
           return (
             <span key={index} className="emoji">
               {token.native}
             </span>
           );
         }
-        return renderTokenDefault(token, { set: "native" });
+        return renderTokenDefault(token, { set: 'native' });
       })}
     </span>
   );
@@ -143,10 +143,10 @@ Render emojis from a sprite sheet by providing a `sprite` config:
 <EmojiText
   set="apple"
   sprite={{
-    src: "/emoji-sheet.png",
+    src: '/emoji-sheet.png',
     size: 20,
     columns: 4,
-    sheet: { "1F44B": { x: 1, y: 2 } },
+    sheet: { '1F44B': { x: 1, y: 2 } },
   }}
 >
   :wave:
@@ -231,14 +231,14 @@ Register custom emojis via the provider or per-instance. Each category contains 
   data={data}
   customEmojis={[
     {
-      id: "custom",
-      name: "Custom",
+      id: 'custom',
+      name: 'Custom',
       emojis: [
         {
-          id: "partyparrot",
-          name: "Party Parrot",
-          keywords: ["party", "parrot"],
-          skins: [{ src: "/emojis/partyparrot.gif" }],
+          id: 'partyparrot',
+          name: 'Party Parrot',
+          keywords: ['party', 'parrot'],
+          skins: [{ src: '/emojis/partyparrot.gif' }],
         },
       ],
     },
@@ -256,7 +256,7 @@ Map additional shortcodes to existing emoji IDs via `extraAliases`. Values can r
 
 ```tsx
 <EmojiProvider data={data}>
-  <EmojiText extraAliases={{ hi: "wave", dance: "partyparrot" }}>:hi: :dance:</EmojiText>
+  <EmojiText extraAliases={{ hi: 'wave', dance: 'partyparrot' }}>:hi: :dance:</EmojiText>
 </EmojiProvider>
 ```
 
@@ -276,10 +276,10 @@ This means an `extraAliases` entry with the same key as a custom emoji ID will o
 The `tokenize` function is framework-agnostic and can be used without React.
 
 ```ts
-import { tokenize } from "react-emoji-text/core";
-import data from "@emoji-mart/data";
+import { tokenize } from 'react-emoji-text/core';
+import data from '@emoji-mart/data';
 
-const tokens = tokenize("hello :wave: world", { data });
+const tokens = tokenize('hello :wave: world', { data });
 // [
 //   { type: "text", value: "hello " },
 //   { type: "emoji", emoji: {...}, native: "👋", source: "shortcode", ... },
@@ -302,20 +302,20 @@ const tokens = tokenize("hello :wave: world", { data });
 ```ts
 type Token = TextToken | EmojiToken | UnknownToken;
 
-type TextToken = { type: "text"; value: string };
+type TextToken = { type: 'text'; value: string };
 
 type EmojiToken = {
-  type: "emoji";
+  type: 'emoji';
   emoji: EmojiEntry;
   native: string;
   skin?: SkinTone;
   shortcode?: string;
   match: string;
-  source: "unicode" | "shortcode" | "ascii" | "custom";
+  source: 'unicode' | 'shortcode' | 'ascii' | 'custom';
 };
 
 type UnknownToken = {
-  type: "unknown";
+  type: 'unknown';
   shortcode: string;
   match: string;
 };
@@ -350,9 +350,9 @@ All additional HTML attributes are forwarded to the wrapper `<span>`.
 Returns an array of strings and React elements for manual rendering:
 
 ```ts
-import { toArray } from "react-emoji-text/compat";
+import { toArray } from 'react-emoji-text/compat';
 
-const elements = toArray("hello :wave:");
+const elements = toArray('hello :wave:');
 // ["hello ", <span title="wave">👋</span>]
 ```
 

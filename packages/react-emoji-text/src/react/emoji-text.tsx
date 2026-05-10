@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Children,
@@ -9,7 +9,7 @@ import {
   createElement,
   isValidElement,
   useMemo,
-} from "react";
+} from 'react';
 import type {
   CustomEmojiCategory,
   EmojiData,
@@ -21,13 +21,13 @@ import type {
   Token,
   TokenizeOptions,
   UnknownToken,
-} from "../core/types";
-import { resolveImageUrlFn } from "./image-url";
-import { createTokenKeyFactory } from "./keys";
-import { useEmojiContext } from "./provider";
-import type { DefaultRenderOptions } from "./render";
-import { isOnlyEmoji, renderTokenDefault } from "./render";
-import { useTokens } from "./use-tokens";
+} from '../core/types';
+import { resolveImageUrlFn } from './image-url';
+import { createTokenKeyFactory } from './keys';
+import { useEmojiContext } from './provider';
+import type { DefaultRenderOptions } from './render';
+import { isOnlyEmoji, renderTokenDefault } from './render';
+import { useTokens } from './use-tokens';
 
 interface EmojiTextBaseProps {
   as?: keyof HTMLElementTagNameMap;
@@ -50,7 +50,7 @@ type EmojiTextContentProps =
 export type EmojiTextProps = EmojiTextBaseProps & EmojiTextContentProps;
 
 export type EmojiTextComponentProps = EmojiTextProps &
-  Omit<HTMLAttributes<HTMLElement>, "children"> & {
+  Omit<HTMLAttributes<HTMLElement>, 'children'> & {
     data?: EmojiData;
     customEmojis?: CustomEmojiCategory[];
     set?: EmojiSet;
@@ -71,23 +71,23 @@ export interface EmojiTextUnknownProps {
 }
 
 interface EmojiTextSlots {
-  emoji?: EmojiTextEmojiProps["children"];
-  unknown?: EmojiTextUnknownProps["children"];
+  emoji?: EmojiTextEmojiProps['children'];
+  unknown?: EmojiTextUnknownProps['children'];
 }
 
-type SlotChild = ReactNode | EmojiTextEmojiProps["children"] | EmojiTextUnknownProps["children"];
+type SlotChild = ReactNode | EmojiTextEmojiProps['children'] | EmojiTextUnknownProps['children'];
 
 function EmojiTextEmoji(_props: EmojiTextEmojiProps) {
   return null;
 }
 
-EmojiTextEmoji.displayName = "EmojiText.Emoji";
+EmojiTextEmoji.displayName = 'EmojiText.Emoji';
 
 function EmojiTextUnknown(_props: EmojiTextUnknownProps) {
   return null;
 }
 
-EmojiTextUnknown.displayName = "EmojiText.Unknown";
+EmojiTextUnknown.displayName = 'EmojiText.Unknown';
 
 function collectSlots(children: ReactNode): EmojiTextSlots {
   const slots: EmojiTextSlots = {};
@@ -106,13 +106,13 @@ function collectSlotChildren(children: ReactNode, slots: EmojiTextSlots) {
 
     const renderer = child.props.children;
 
-    if (child.type === EmojiTextEmoji && typeof renderer === "function") {
-      slots.emoji = renderer as EmojiTextEmojiProps["children"];
+    if (child.type === EmojiTextEmoji && typeof renderer === 'function') {
+      slots.emoji = renderer as EmojiTextEmojiProps['children'];
       return;
     }
 
-    if (child.type === EmojiTextUnknown && typeof renderer === "function") {
-      slots.unknown = renderer as EmojiTextUnknownProps["children"];
+    if (child.type === EmojiTextUnknown && typeof renderer === 'function') {
+      slots.unknown = renderer as EmojiTextUnknownProps['children'];
     }
   });
 }
@@ -124,11 +124,11 @@ interface TokenNodeProps {
 }
 
 function TokenNode({ token, slots, defaultRenderOptions }: TokenNodeProps) {
-  if (token.type === "emoji" && slots.emoji) {
+  if (token.type === 'emoji' && slots.emoji) {
     return slots.emoji(token);
   }
 
-  if (token.type === "unknown" && slots.unknown) {
+  if (token.type === 'unknown' && slots.unknown) {
     return slots.unknown(token);
   }
 
@@ -136,7 +136,7 @@ function TokenNode({ token, slots, defaultRenderOptions }: TokenNodeProps) {
 }
 
 function EmojiTextRoot({
-  as = "span",
+  as = 'span',
   className,
   emojiClassName,
   onlyEmojiClassName,
@@ -155,7 +155,7 @@ function EmojiTextRoot({
   ...htmlProps
 }: EmojiTextComponentProps) {
   const context = useEmojiContext();
-  const set = setProp ?? context.config.set ?? "native";
+  const set = setProp ?? context.config.set ?? 'native';
   const hasImageOverride =
     getImageUrlProp !== undefined || imageUrlTemplateProp !== undefined || spriteProp !== undefined;
 
@@ -188,7 +188,7 @@ function EmojiTextRoot({
     [asciiProp, customEmojisProp, dataProp, defaultSkinProp, extraAliasesProp],
   );
 
-  const sourceText = text ?? (typeof children === "string" ? children : "");
+  const sourceText = text ?? (typeof children === 'string' ? children : '');
   const slots = useMemo(() => collectSlots(children), [children]);
   const tokens = useTokens(sourceText, tokenOverrides);
   const onlyEmoji = useMemo(() => isOnlyEmoji(tokens), [tokens]);
@@ -204,7 +204,7 @@ function EmojiTextRoot({
   const createKey = createTokenKeyFactory();
 
   const wrapperClassName =
-    [className, onlyEmoji && onlyEmojiClassName].filter(Boolean).join(" ") || undefined;
+    [className, onlyEmoji && onlyEmojiClassName].filter(Boolean).join(' ') || undefined;
 
   const renderedContent = tokens.map((token) => (
     <TokenNode

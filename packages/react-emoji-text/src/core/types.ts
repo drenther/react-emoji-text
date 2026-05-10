@@ -32,9 +32,9 @@ export interface SpriteConfig {
   sheet: Record<string, { x: number; y: number }>;
 }
 
-export type EmojiSet = "native" | "apple" | "google" | "twitter" | "facebook";
+export type EmojiSet = 'native' | 'apple' | 'google' | 'twitter' | 'facebook';
 export type SkinTone = 1 | 2 | 3 | 4 | 5 | 6;
-export type EmojiSource = "unicode" | "shortcode" | "ascii" | "custom";
+export type EmojiSource = 'unicode' | 'shortcode' | 'ascii' | 'custom';
 
 export interface EmojiImageContext {
   set: EmojiSet;
@@ -63,12 +63,12 @@ export interface EmojiData {
 }
 
 export type TextToken = {
-  type: "text";
+  type: 'text';
   value: string;
 };
 
 export type EmojiToken = {
-  type: "emoji";
+  type: 'emoji';
   emoji: EmojiEntry;
   native: string;
   skin?: SkinTone;
@@ -78,7 +78,7 @@ export type EmojiToken = {
 };
 
 export type UnknownToken = {
-  type: "unknown";
+  type: 'unknown';
   shortcode: string;
   match: string;
 };

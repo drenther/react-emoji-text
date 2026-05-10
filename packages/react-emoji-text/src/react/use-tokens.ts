@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import { tokenize } from "../core/tokenize";
-import type { Token, TokenizeOptions } from "../core/types";
-import { useEmojiContext } from "./provider";
+import { useMemo } from 'react';
+import { tokenize } from '../core/tokenize';
+import type { Token, TokenizeOptions } from '../core/types';
+import { useEmojiContext } from './provider';
 
 export function useTokens(text: string, overrides?: Partial<TokenizeOptions>): Token[] {
   const { config } = useEmojiContext();

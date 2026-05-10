@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { type ReactNode, createContext, use, useMemo } from "react";
-import { buildIndexes, type EmojiIndexes } from "../core/indexes";
+import { type ReactNode, createContext, use, useMemo } from 'react';
+import { buildIndexes, type EmojiIndexes } from '../core/indexes';
 import type {
   CustomEmojiCategory,
   EmojiConfig,
@@ -10,8 +10,8 @@ import type {
   GetImageUrl,
   SkinTone,
   SpriteConfig,
-} from "../core/types";
-import { resolveImageUrlFn } from "./image-url";
+} from '../core/types';
+import { resolveImageUrlFn } from './image-url';
 
 export interface EmojiContextValue {
   indexes: EmojiIndexes;
@@ -37,7 +37,7 @@ export interface EmojiProviderProps {
 export function EmojiProvider({
   data,
   customEmojis,
-  set = "native",
+  set = 'native',
   defaultSkin,
   ascii = true,
   getImageUrl,
@@ -92,7 +92,7 @@ export function EmojiProvider({
 export function useEmojiContext(): EmojiContextValue {
   const context = use(EmojiContext);
   if (!context) {
-    throw new Error("useEmojiContext must be used within an EmojiProvider");
+    throw new Error('useEmojiContext must be used within an EmojiProvider');
   }
   return context;
 }

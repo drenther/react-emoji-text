@@ -1,8 +1,8 @@
-export { buildAsciiIndex, matchAscii } from "./ascii";
-export { buildIndexes } from "./indexes";
-export type { EmojiIndexes, ShortcodeEntry } from "./indexes";
-export { detectSkinToneFromUnified, resolveSkin, skinToneShortcodeToTone } from "./skin";
-export { tokenize } from "./tokenize";
+export { buildAsciiIndex, matchAscii } from './ascii';
+export { buildIndexes } from './indexes';
+export type { EmojiIndexes, ShortcodeEntry } from './indexes';
+export { detectSkinToneFromUnified, resolveSkin, skinToneShortcodeToTone } from './skin';
+export { tokenize } from './tokenize';
 export type {
   CustomEmoji,
   CustomEmojiCategory,
@@ -21,4 +21,4 @@ export type {
   Token,
   TokenizeOptions,
   UnknownToken,
-} from "./types";
+} from './types';

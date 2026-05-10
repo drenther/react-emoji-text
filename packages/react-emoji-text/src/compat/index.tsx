@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import emojiMartData from "@emoji-mart/data";
-import type { HTMLAttributes, ReactElement, Ref } from "react";
-import { cloneElement, isValidElement } from "react";
-import { tokenize } from "../core/tokenize";
+import emojiMartData from '@emoji-mart/data';
+import type { HTMLAttributes, ReactElement, Ref } from 'react';
+import { cloneElement, isValidElement } from 'react';
+import { tokenize } from '../core/tokenize';
 import type {
   EmojiData,
   EmojiSet,
   GetImageUrl,
   SpriteConfig,
   TokenizeOptions,
-} from "../core/types";
-import { resolveImageUrlFn } from "../react/image-url";
-import { createTokenKeyFactory } from "../react/keys";
-import { renderTokenDefault } from "../react/render";
+} from '../core/types';
+import { resolveImageUrlFn } from '../react/image-url';
+import { createTokenKeyFactory } from '../react/keys';
+import { renderTokenDefault } from '../react/render';
 
 export interface CompatOptions extends Partial<TokenizeOptions> {
   getImageUrl?: GetImageUrl;
@@ -31,7 +31,7 @@ export interface EmojiProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 export function toArray(text: string, options?: CompatOptions): Array<string | ReactElement> {
-  const data: TokenizeOptions["data"] = options?.data ?? (emojiMartData as unknown as EmojiData);
+  const data: TokenizeOptions['data'] = options?.data ?? (emojiMartData as unknown as EmojiData);
 
   const fullOptions: TokenizeOptions = {
     data,
@@ -40,7 +40,7 @@ export function toArray(text: string, options?: CompatOptions): Array<string | R
     defaultSkin: options?.defaultSkin,
     extraAliases: options?.extraAliases,
   };
-  const renderSet = options?.set ?? "native";
+  const renderSet = options?.set ?? 'native';
   const resolvedGetImageUrl = resolveImageUrlFn({
     getImageUrl: options?.getImageUrl,
     imageUrlTemplate: options?.imageUrlTemplate,
@@ -49,8 +49,8 @@ export function toArray(text: string, options?: CompatOptions): Array<string | R
   const createKey = createTokenKeyFactory();
 
   return tokenize(text, fullOptions).map((token) => {
-    if (token.type === "text") return token.value;
-    if (token.type === "unknown") return token.match;
+    if (token.type === 'text') return token.value;
+    if (token.type === 'unknown') return token.match;
 
     const key = createKey(token);
     const rendered = renderTokenDefault(token, {
@@ -82,14 +82,14 @@ export default function Emoji({
 }: EmojiProps) {
   const elements = toArray(text, {
     ...options,
-    set: options?.set ?? (svg ? "apple" : "native"),
+    set: options?.set ?? (svg ? 'apple' : 'native'),
   });
   const allEmoji = elements.every(
-    (element) => typeof element !== "string" || element.trim() === "",
+    (element) => typeof element !== 'string' || element.trim() === '',
   );
 
   const combinedClassName =
-    [className, allEmoji && onlyEmojiClassName].filter(Boolean).join(" ") || undefined;
+    [className, allEmoji && onlyEmojiClassName].filter(Boolean).join(' ') || undefined;
 
   return (
     <span className={combinedClassName} ref={ref} {...htmlProps}>

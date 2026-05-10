@@ -5,10 +5,10 @@ Drop-in replacement for `react-emoji-render`. Uses the same engine as the primar
 ## Usage
 
 ```tsx
-import Emoji, { toArray } from "react-emoji-text/compat";
+import Emoji, { toArray } from 'react-emoji-text/compat';
 
 <Emoji text="hello :wave:" className="msg" onlyEmojiClassName="jumbo" />;
-toArray("hello :wave:"); // → Array<string | ReactElement>
+toArray('hello :wave:'); // → Array<string | ReactElement>
 ```
 
 ## Divergences from react-emoji-render

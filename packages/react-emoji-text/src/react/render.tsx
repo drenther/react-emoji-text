@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 import type {
   EmojiImageContext,
   EmojiSet,
@@ -10,7 +10,7 @@ import type {
   SpriteConfig,
   Token,
   UnknownToken,
-} from "../core/types";
+} from '../core/types';
 
 export interface DefaultRenderOptions {
   set: EmojiSet;
@@ -21,17 +21,17 @@ export interface DefaultRenderOptions {
 
 export function renderTokenDefault(token: Token, options: DefaultRenderOptions): ReactNode {
   switch (token.type) {
-    case "text":
+    case 'text':
       return token.value;
-    case "emoji":
+    case 'emoji':
       return renderEmojiDefault(token, options);
-    case "unknown":
+    case 'unknown':
       return renderUnknownDefault(token);
   }
 }
 
 function renderEmojiDefault(token: EmojiToken, options: DefaultRenderOptions): ReactNode {
-  if (token.source === "custom") {
+  if (token.source === 'custom') {
     const src = token.emoji.skins[0]?.src;
     if (!src) return token.match;
 
@@ -45,7 +45,7 @@ function renderEmojiDefault(token: EmojiToken, options: DefaultRenderOptions): R
     );
   }
 
-  if (options.set === "native") {
+  if (options.set === 'native') {
     return token.native;
   }
 
@@ -55,7 +55,7 @@ function renderEmojiDefault(token: EmojiToken, options: DefaultRenderOptions): R
     const context: EmojiImageContext = {
       set: options.set,
       skin: token.skin ?? 1,
-      unified: skinEntry?.unified ?? "",
+      unified: skinEntry?.unified ?? '',
     };
     const src = options.getImageUrl(token.emoji, context);
 
@@ -113,9 +113,9 @@ function renderSpriteEmoji(
         backgroundImage: `url(${sprite.src})`,
         backgroundPosition: `-${coordinates.x * sprite.size}px -${coordinates.y * sprite.size}px`,
         backgroundSize: `${sprite.columns * sprite.size}px auto`,
-        display: "inline-block",
+        display: 'inline-block',
         height: `${sprite.size}px`,
-        verticalAlign: "-0.1em",
+        verticalAlign: '-0.1em',
         width: `${sprite.size}px`,
       }}
     />
@@ -127,17 +127,17 @@ function renderUnknownDefault(token: UnknownToken): ReactNode {
 }
 
 const emojiImageStyle = {
-  display: "inline",
-  height: "1em",
-  verticalAlign: "-0.1em",
-  width: "1em",
+  display: 'inline',
+  height: '1em',
+  verticalAlign: '-0.1em',
+  width: '1em',
 };
 
 export function isOnlyEmoji(tokens: Token[]): boolean {
   return (
-    tokens.some((token) => token.type === "emoji") &&
+    tokens.some((token) => token.type === 'emoji') &&
     tokens.every(
-      (token) => token.type === "emoji" || (token.type === "text" && token.value.trim() === ""),
+      (token) => token.type === 'emoji' || (token.type === 'text' && token.value.trim() === ''),
     )
   );
 }

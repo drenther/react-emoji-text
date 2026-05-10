@@ -1,20 +1,20 @@
-import type { Token } from "../core/types";
+import type { Token } from '../core/types';
 
 function tokenKeyBase(token: Token): string {
   switch (token.type) {
-    case "text":
+    case 'text':
       return `text:${token.value}`;
-    case "unknown":
+    case 'unknown':
       return `unknown:${token.match}`;
-    case "emoji":
+    case 'emoji':
       return [
-        "emoji",
+        'emoji',
         token.emoji.id,
         token.source,
-        token.shortcode ?? "",
+        token.shortcode ?? '',
         token.match,
         token.native,
-      ].join(":");
+      ].join(':');
   }
 }
 

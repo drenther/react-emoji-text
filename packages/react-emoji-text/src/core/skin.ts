@@ -1,20 +1,20 @@
-import type { EmojiEntry, SkinTone } from "./types";
+import type { EmojiEntry, SkinTone } from './types';
 
 const SKIN_TONE_MODIFIERS: Record<string, SkinTone> = {
-  "1f3fb": 2,
-  "1f3fc": 3,
-  "1f3fd": 4,
-  "1f3fe": 5,
-  "1f3ff": 6,
+  '1f3fb': 2,
+  '1f3fc': 3,
+  '1f3fd': 4,
+  '1f3fe': 5,
+  '1f3ff': 6,
 };
 
 const SKIN_TONE_UNIFIED: Record<SkinTone, string> = {
-  1: "",
-  2: "1F3FB",
-  3: "1F3FC",
-  4: "1F3FD",
-  5: "1F3FE",
-  6: "1F3FF",
+  1: '',
+  2: '1F3FB',
+  3: '1F3FC',
+  4: '1F3FD',
+  5: '1F3FE',
+  6: '1F3FF',
 };
 
 export function detectSkinToneFromUnified(unified: string): SkinTone | undefined {
@@ -36,7 +36,7 @@ export function resolveSkin(
 
   if (!tone || tone === 1 || emoji.skins.length <= 1) {
     return {
-      native: emoji.skins[0]?.native ?? "",
+      native: emoji.skins[0]?.native ?? '',
       skin: explicitSkin,
     };
   }
@@ -45,7 +45,7 @@ export function resolveSkin(
   const skinEntry = emoji.skins[skinIndex] ?? emoji.skins[0];
 
   return {
-    native: skinEntry?.native ?? emoji.skins[0]?.native ?? "",
+    native: skinEntry?.native ?? emoji.skins[0]?.native ?? '',
     skin: tone,
   };
 }

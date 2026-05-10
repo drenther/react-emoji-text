@@ -1,4 +1,4 @@
-import type { GetImageUrl, SpriteConfig } from "../core/types";
+import type { GetImageUrl, SpriteConfig } from '../core/types';
 
 export interface ResolveImageUrlOptions {
   getImageUrl?: GetImageUrl;
