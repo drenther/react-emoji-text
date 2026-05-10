@@ -1,0 +1,19 @@
+{
+  "name": "docs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'Fumadocs on TanStack Start — not yet scaffolded'",
+    "build": "echo 'Fumadocs on TanStack Start — not yet scaffolded'"
+  },
+  "dependencies": {
+    "@emoji-mart/data": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-emoji-text": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}

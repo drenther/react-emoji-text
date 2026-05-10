@@ -1,0 +1,87 @@
+{
+  "name": "react-emoji-text",
+  "version": "0.0.0",
+  "description": "A modern React renderer that converts plain text into rendered emojis, backed by @emoji-mart/data",
+  "keywords": [
+    "emoji",
+    "emoji-mart",
+    "emoticon",
+    "react",
+    "renderer",
+    "shortcode",
+    "text",
+    "unicode"
+  ],
+  "license": "MIT",
+  "author": "drenther",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drenther/react-emoji-text.git",
+    "directory": "packages/react-emoji-text"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./core": {
+      "types": "./dist/core.d.mts",
+      "import": "./dist/core.mjs",
+      "require": "./dist/core.cjs"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.mts",
+      "import": "./dist/react/index.mjs",
+      "require": "./dist/react/index.cjs"
+    },
+    "./compat": {
+      "types": "./dist/compat/index.d.mts",
+      "import": "./dist/compat/index.mjs",
+      "require": "./dist/compat/index.cjs"
+    },
+    "./package.json": {
+      "default": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@emoji-mart/data": "catalog:",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "happy-dom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@emoji-mart/data": ">=1.2.0",
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
+  },
+  "engines": {
+    "node": ">=24.15.0"
+  }
+}

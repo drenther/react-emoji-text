@@ -1,0 +1,33 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "src/**",
+        "tsdown.config.ts",
+        "tsconfig.json",
+        "tsconfig.base.json",
+        "package.json"
+      ],
+      "outputs": ["dist/**", ".tanstack/**", ".output/**", ".vinxi/**"]
+    },
+    "test": {
+      "inputs": ["src/**", "tests/**", "vitest.config.ts", "tsconfig.json", "package.json"]
+    },
+    "test:coverage": {
+      "inputs": ["src/**", "tests/**", "vitest.config.ts", "tsconfig.json", "package.json"],
+      "outputs": ["coverage/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "tsconfig.json", "tsconfig.base.json", "package.json"]
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
