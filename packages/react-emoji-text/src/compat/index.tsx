@@ -1,8 +1,7 @@
 'use client';
 
-import emojiMartData from '@emoji-mart/data';
 import type { HTMLAttributes, ReactElement, Ref } from 'react';
-import { cloneElement, isValidElement } from 'react';
+import { cloneElement, isValidElement, useMemo } from 'react';
 import { tokenize } from '../core/tokenize';
 import type {
   EmojiData,
@@ -15,7 +14,8 @@ import { resolveImageUrlFn } from '../react/image-url';
 import { createTokenKeyFactory } from '../react/keys';
 import { renderTokenDefault } from '../react/render';
 
-export interface CompatOptions extends Partial<TokenizeOptions> {
+export interface CompatOptions extends Partial<Omit<TokenizeOptions, 'data'>> {
+  data: EmojiData;
   getImageUrl?: GetImageUrl;
   imageUrlTemplate?: string;
   set?: EmojiSet;
@@ -27,24 +27,24 @@ export interface EmojiProps extends HTMLAttributes<HTMLSpanElement> {
   onlyEmojiClassName?: string;
   ref?: Ref<HTMLSpanElement>;
   svg?: boolean;
-  options?: CompatOptions;
+  options: CompatOptions;
 }
 
-export function toArray(text: string, options?: CompatOptions): Array<string | ReactElement> {
-  const data: TokenizeOptions['data'] = options?.data ?? (emojiMartData as unknown as EmojiData);
+export function toArray(text: string, options: CompatOptions): Array<string | ReactElement> {
+  const data = options.data;
 
   const fullOptions: TokenizeOptions = {
     data,
-    customEmojis: options?.customEmojis,
-    ascii: options?.ascii ?? true,
-    defaultSkin: options?.defaultSkin,
-    extraAliases: options?.extraAliases,
+    customEmojis: options.customEmojis,
+    ascii: options.ascii ?? true,
+    defaultSkin: options.defaultSkin,
+    extraAliases: options.extraAliases,
   };
-  const renderSet = options?.set ?? 'native';
+  const renderSet = options.set ?? 'native';
   const resolvedGetImageUrl = resolveImageUrlFn({
-    getImageUrl: options?.getImageUrl,
-    imageUrlTemplate: options?.imageUrlTemplate,
-    sprite: options?.sprite,
+    getImageUrl: options.getImageUrl,
+    imageUrlTemplate: options.imageUrlTemplate,
+    sprite: options.sprite,
   });
   const createKey = createTokenKeyFactory();
 
@@ -56,7 +56,7 @@ export function toArray(text: string, options?: CompatOptions): Array<string | R
     const rendered = renderTokenDefault(token, {
       getImageUrl: resolvedGetImageUrl,
       set: renderSet,
-      sprite: options?.sprite,
+      sprite: options.sprite,
     });
 
     if (isValidElement(rendered)) {
@@ -80,16 +80,50 @@ export default function Emoji({
   svg,
   ...htmlProps
 }: EmojiProps) {
-  const elements = toArray(text, {
-    ...options,
-    set: options?.set ?? (svg ? 'apple' : 'native'),
-  });
-  const allEmoji = elements.every(
-    (element) => typeof element !== 'string' || element.trim() === '',
-  );
+  const data = options.data;
+  const customEmojis = options.customEmojis;
+  const ascii = options.ascii;
+  const defaultSkin = options.defaultSkin;
+  const extraAliases = options.extraAliases;
+  const getImageUrl = options.getImageUrl;
+  const imageUrlTemplate = options.imageUrlTemplate;
+  const sprite = options.sprite;
+  const set = options.set ?? (svg ? 'apple' : 'native');
 
-  const combinedClassName =
-    [className, allEmoji && onlyEmojiClassName].filter(Boolean).join(' ') || undefined;
+  const { elements, allEmoji } = useMemo(() => {
+    const elements = toArray(text, {
+      data,
+      customEmojis,
+      ascii,
+      defaultSkin,
+      extraAliases,
+      getImageUrl,
+      imageUrlTemplate,
+      set,
+      sprite,
+    });
+
+    return {
+      allEmoji: elements.every((element) => typeof element !== 'string' || element.trim() === ''),
+      elements,
+    };
+  }, [
+    text,
+    data,
+    customEmojis,
+    ascii,
+    defaultSkin,
+    extraAliases,
+    getImageUrl,
+    imageUrlTemplate,
+    set,
+    sprite,
+  ]);
+
+  const combinedClassName = useMemo(
+    () => [className, allEmoji && onlyEmojiClassName].filter(Boolean).join(' ') || undefined,
+    [className, allEmoji, onlyEmojiClassName],
+  );
 
   return (
     <span className={combinedClassName} ref={ref} {...htmlProps}>

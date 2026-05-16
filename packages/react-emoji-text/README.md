@@ -323,16 +323,35 @@ type UnknownToken = {
 
 ## Compat API
 
-A drop-in replacement for `react-emoji-render`. Bundles `@emoji-mart/data` so no provider is needed.
+A drop-in replacement for `react-emoji-render`. Pass adapted emoji data directly via `options` — no provider needed. Works with both `@emoji-mart/data` and `emojibase-data`.
 
 ### Emoji Component
 
-```tsx
-import Emoji from "react-emoji-text/compat";
+#### With @emoji-mart/data
 
-<Emoji text="hello :wave:" />
-<Emoji text=":wave:" onlyEmojiClassName="jumbo" />
-<Emoji text=":wave:" svg options={{ imageUrlTemplate: "/emoji/{set}/{unified}.png" }} />
+```tsx
+import emojiMartData from '@emoji-mart/data';
+import { fromEmojiMart } from 'react-emoji-text/adapters/emoji-mart';
+import Emoji from 'react-emoji-text/compat';
+
+const data = fromEmojiMart(emojiMartData);
+
+<Emoji text="hello :wave:" options={{ data }} />
+<Emoji text=":wave:" onlyEmojiClassName="jumbo" options={{ data }} />
+<Emoji text=":wave:" svg options={{ data, imageUrlTemplate: "/emoji/{set}/{unified}.png" }} />
+```
+
+#### With emojibase
+
+```tsx
+import emojis from 'emojibase-data/en/data.json';
+import shortcodes from 'emojibase-data/en/shortcodes/emojibase.json';
+import { fromEmojibase } from 'react-emoji-text/adapters/emojibase';
+import Emoji from 'react-emoji-text/compat';
+
+const data = fromEmojibase(emojis, { shortcodes });
+
+<Emoji text="hello :wave:" options={{ data }} />;
 ```
 
 | Prop                 | Type                   | Default    | Description                               |
@@ -340,7 +359,7 @@ import Emoji from "react-emoji-text/compat";
 | `text`               | `string`               | _required_ | Source text                               |
 | `onlyEmojiClassName` | `string`               | —          | Class when content is only emojis         |
 | `svg`                | `boolean`              | —          | When `true`, uses the `"apple"` image set |
-| `options`            | `CompatOptions`        | —          | Tokenize and render options               |
+| `options`            | `CompatOptions`        | _required_ | Tokenize and render options               |
 | `ref`                | `Ref<HTMLSpanElement>` | —          | Forwarded ref                             |
 
 All additional HTML attributes are forwarded to the wrapper `<span>`.
@@ -352,8 +371,38 @@ Returns an array of strings and React elements for manual rendering:
 ```ts
 import { toArray } from 'react-emoji-text/compat';
 
-const elements = toArray('hello :wave:');
+const elements = toArray('hello :wave:', { data });
 // ["hello ", <span title="wave">👋</span>]
 ```
 
 Accepts the same `CompatOptions` as the `Emoji` component's `options` prop.
+
+### Wrapper Pattern
+
+Create a thin wrapper to pre-configure the data source, then use it everywhere without repeating the adapter setup:
+
+```tsx
+// emoji.tsx
+import emojiMartData from '@emoji-mart/data';
+import { fromEmojiMart } from 'react-emoji-text/adapters/emoji-mart';
+import BaseEmoji, { toArray as baseToArray } from 'react-emoji-text/compat';
+import type { EmojiProps } from 'react-emoji-text/compat';
+
+const data = fromEmojiMart(emojiMartData);
+
+export default function Emoji(props: Omit<EmojiProps, 'options'>) {
+  return <BaseEmoji {...props} options={{ data }} />;
+}
+
+export function toArray(text: string) {
+  return baseToArray(text, { data });
+}
+```
+
+```tsx
+// usage
+import Emoji, { toArray } from './emoji';
+
+<Emoji text="hello :wave:" />;
+toArray('hello :wave:');
+```
