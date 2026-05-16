@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildAsciiIndex, matchAscii } from '../src/core/ascii';
+import { buildAsciiCandidates, buildAsciiIndex, matchAscii } from '../src/core/ascii';
 import { buildIndexes } from '../src/core/indexes';
 import { resolveSkin, skinToneShortcodeToTone } from '../src/core/skin';
 import { tokenize } from '../src/core/tokenize';
@@ -351,6 +351,28 @@ describe('ascii', () => {
     const result = matchAscii('hello :-)', 6, index);
 
     expect(result).toEqual({ ascii: ':-)', emojiId: 'slightly_smiling_face' });
+  });
+
+  it('builds longest-first ASCII candidates for repeated matching', () => {
+    const index = buildAsciiIndex(data);
+    const candidates = buildAsciiCandidates(index);
+
+    expect(
+      candidates.every(
+        (candidate, index) => index === 0 || candidates[index - 1]!.length >= candidate.length,
+      ),
+    ).toBe(true);
+    expect(candidates.indexOf(':-)')).toBeLessThan(candidates.indexOf(':)'));
+  });
+
+  it('matches ASCII with prebuilt candidates', () => {
+    const index = buildAsciiIndex(data);
+    const candidates = buildAsciiCandidates(index);
+
+    expect(matchAscii('hello :-)', 6, index, candidates)).toEqual({
+      ascii: ':-)',
+      emojiId: 'slightly_smiling_face',
+    });
   });
 
   it('rejects ascii without boundary', () => {

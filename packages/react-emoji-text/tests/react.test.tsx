@@ -1,8 +1,9 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { createRef, isValidElement } from 'react';
-import { afterEach, describe, expect, it } from 'vitest';
-import Emoji, { toArray } from '../src/compat/index';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import Emoji, { toArray, type CompatOptions } from '../src/compat/index';
 import { EmojiText } from '../src/react/emoji-text';
+import type { EmojiTextEmojiProps } from '../src/react/emoji-text';
 import { EmojiProvider, useEmojiContext } from '../src/react/provider';
 import type { EmojiData } from '../src/core/types';
 
@@ -322,11 +323,52 @@ describe('EmojiText', () => {
 
     expect(container.innerHTML).toBe('<span><em>wave</em></span>');
   });
+
+  it('reuses provider indexes when tokenizing descendant text', () => {
+    const baseData = createMockData();
+    let emojiEnumerationCount = 0;
+    const dataWithCountedIndexes: EmojiData = {
+      ...baseData,
+      emojis: new Proxy(baseData.emojis, {
+        ownKeys(target) {
+          emojiEnumerationCount += 1;
+          return Reflect.ownKeys(target);
+        },
+      }),
+    };
+
+    render(
+      <EmojiProvider data={dataWithCountedIndexes}>
+        <EmojiText>:wave:</EmojiText>
+      </EmojiProvider>,
+    );
+
+    expect(emojiEnumerationCount).toBe(1);
+  });
+
+  it('reuses rendered token nodes when token render inputs are stable', () => {
+    const renderEmoji = vi.fn((token: Parameters<EmojiTextEmojiProps['children']>[0]) => (
+      <em>{token.native}</em>
+    ));
+    const emojiSlot = <EmojiText.Emoji>{renderEmoji}</EmojiText.Emoji>;
+    const view = (className: string) => (
+      <EmojiProvider data={data}>
+        <EmojiText className={className} text=":wave:">
+          {emojiSlot}
+        </EmojiText>
+      </EmojiProvider>
+    );
+    const { rerender } = render(view('first'));
+
+    rerender(view('second'));
+
+    expect(renderEmoji).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('compat', () => {
-  it('parses with bundled emoji data when no options are provided', () => {
-    const [text, emoji] = toArray('hello 👋');
+  it('parses emoji when data is provided via options', () => {
+    const [text, emoji] = toArray('hello 👋', { data: createMockData() });
 
     expect(text).toBe('hello ');
     expect(isValidElement(emoji)).toBe(true);
@@ -432,6 +474,20 @@ describe('compat', () => {
     );
 
     expect(screen.getByRole('img')).toHaveAttribute('src', '/emoji/apple/1F44B.png');
+  });
+
+  it('memoizes compat token rendering when inputs are stable', () => {
+    const getImageUrl = vi.fn(() => '/emoji.png');
+    const options: CompatOptions = {
+      data: createMockData(),
+      getImageUrl,
+      set: 'apple',
+    };
+    const { rerender } = render(<Emoji options={options} text=":wave:" />);
+
+    rerender(<Emoji options={options} text=":wave:" />);
+
+    expect(getImageUrl).toHaveBeenCalledTimes(1);
   });
 
   it('forwards refs and HTML props to the compat wrapper', () => {

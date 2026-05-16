@@ -46,6 +46,10 @@ export function buildAsciiIndex(data: EmojiData): Map<string, string> {
   return index;
 }
 
+export function buildAsciiCandidates(asciiIndex: Map<string, string>): string[] {
+  return Array.from(asciiIndex.keys()).sort((first, second) => second.length - first.length);
+}
+
 const BOUNDARY_BEFORE = /(?:^|[\s\n])$/;
 const BOUNDARY_AFTER = /^(?:[\s\n]|$)/;
 
@@ -53,17 +57,16 @@ export function matchAscii(
   input: string,
   position: number,
   asciiIndex: Map<string, string>,
+  asciiCandidates = buildAsciiCandidates(asciiIndex),
 ): { ascii: string; emojiId: string } | undefined {
   const before = input.slice(0, position);
   if (position > 0 && !BOUNDARY_BEFORE.test(before)) {
     return undefined;
   }
 
-  const candidates = Array.from(asciiIndex.keys())
-    .filter((ascii) => input.startsWith(ascii, position))
-    .sort((first, second) => second.length - first.length);
+  for (const ascii of asciiCandidates) {
+    if (!input.startsWith(ascii, position)) continue;
 
-  for (const ascii of candidates) {
     const after = input.slice(position + ascii.length);
     if (BOUNDARY_AFTER.test(after)) {
       const emojiId = asciiIndex.get(ascii);

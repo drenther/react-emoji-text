@@ -1,4 +1,4 @@
-import { buildAsciiIndex } from './ascii';
+import { buildAsciiCandidates, buildAsciiIndex } from './ascii';
 import type { CustomEmojiCategory, EmojiData, EmojiEntry, SkinTone } from './types';
 
 export interface ShortcodeEntry {
@@ -12,6 +12,7 @@ export interface EmojiIndexes {
   unicodeMap: Map<string, string>;
   shortcodeIndex: Map<string, ShortcodeEntry>;
   asciiIndex: Map<string, string>;
+  asciiCandidates: string[];
   emojiMap: Map<string, EmojiEntry>;
 }
 
@@ -96,6 +97,7 @@ export function buildIndexes(
   const asciiIndex = buildAsciiIndex(data);
 
   return {
+    asciiCandidates: buildAsciiCandidates(asciiIndex),
     unicodeRegex,
     unicodeMap,
     shortcodeIndex,

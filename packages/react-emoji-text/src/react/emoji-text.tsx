@@ -201,19 +201,23 @@ function EmojiTextRoot({
     }),
     [context.config.sprite, emojiClassName, hasImageOverride, resolvedGetImageUrl, set, spriteProp],
   );
-  const createKey = createTokenKeyFactory();
 
-  const wrapperClassName =
-    [className, onlyEmoji && onlyEmojiClassName].filter(Boolean).join(' ') || undefined;
+  const wrapperClassName = useMemo(
+    () => [className, onlyEmoji && onlyEmojiClassName].filter(Boolean).join(' ') || undefined,
+    [className, onlyEmoji, onlyEmojiClassName],
+  );
 
-  const renderedContent = tokens.map((token) => (
-    <TokenNode
-      key={createKey(token)}
-      token={token}
-      slots={slots}
-      defaultRenderOptions={defaultRenderOptions}
-    />
-  ));
+  const renderedContent = useMemo(() => {
+    const createKey = createTokenKeyFactory();
+    return tokens.map((token) => (
+      <TokenNode
+        key={createKey(token)}
+        token={token}
+        slots={slots}
+        defaultRenderOptions={defaultRenderOptions}
+      />
+    ));
+  }, [tokens, slots, defaultRenderOptions]);
 
   return createElement(as, { ...htmlProps, className: wrapperClassName, ref }, ...renderedContent);
 }

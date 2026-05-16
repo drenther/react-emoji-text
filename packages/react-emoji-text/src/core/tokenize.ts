@@ -15,7 +15,13 @@ const indexCache = new WeakMap<
   }>
 >();
 
-function getIndexes(options: TokenizeOptions): EmojiIndexes {
+type TokenizeRuntimeOptions = TokenizeOptions & { indexes?: EmojiIndexes };
+
+function getIndexes(options: TokenizeRuntimeOptions): EmojiIndexes {
+  if (options.indexes) {
+    return options.indexes;
+  }
+
   const cachedEntries = indexCache.get(options.data);
   const cachedEntry = cachedEntries?.find(
     (entry) =>
@@ -104,6 +110,10 @@ function tryMatchUnknownShortcode(
 }
 
 export function tokenize(input: string, options: TokenizeOptions): Token[] {
+  return tokenizeWithIndexes(input, options);
+}
+
+export function tokenizeWithIndexes(input: string, options: TokenizeRuntimeOptions): Token[] {
   const indexes = getIndexes(options);
   const tokens: Token[] = [];
   const ascii = options.ascii ?? true;
@@ -188,7 +198,7 @@ export function tokenize(input: string, options: TokenizeOptions): Token[] {
     }
 
     if (!matched && ascii) {
-      const asciiResult = matchAscii(input, position, indexes.asciiIndex);
+      const asciiResult = matchAscii(input, position, indexes.asciiIndex, indexes.asciiCandidates);
       if (asciiResult) {
         flushText();
         const emoji = indexes.emojiMap.get(asciiResult.emojiId);

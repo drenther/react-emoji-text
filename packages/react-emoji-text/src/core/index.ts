@@ -1,4 +1,4 @@
-export { buildAsciiIndex, matchAscii } from './ascii';
+export { buildAsciiCandidates, buildAsciiIndex, matchAscii } from './ascii';
 export { buildIndexes } from './indexes';
 export type { EmojiIndexes, ShortcodeEntry } from './indexes';
 export { detectSkinToneFromUnified, resolveSkin, skinToneShortcodeToTone } from './skin';
