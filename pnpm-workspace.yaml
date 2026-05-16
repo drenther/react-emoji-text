@@ -7,7 +7,11 @@ ignoreScripts: true
 minimumReleaseAge: 10080
 blockExoticSubdeps: true
 trustPolicy: no-downgrade
-onlyBuiltDependencies: []
+onlyBuiltDependencies:
+  - esbuild
+
+overrides:
+  semver@6: 7.7.4
 
 catalog:
   react: 19.2.5

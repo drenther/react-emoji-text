@@ -1,0 +1,61 @@
+---
+title: Custom Emojis
+description: Register custom emojis with your own images.
+---
+
+import EmojiPlayground from '../../../components/EmojiPlayground';
+
+## Registration
+
+Register custom emojis via the provider or per-instance. Each category contains an array of emojis with image sources.
+
+```tsx
+<EmojiProvider
+  data={data}
+  customEmojis={[
+    {
+      id: 'custom',
+      name: 'Custom',
+      emojis: [
+        {
+          id: 'partyparrot',
+          name: 'Party Parrot',
+          keywords: ['party', 'parrot'],
+          skins: [{ src: '/emojis/partyparrot.gif' }],
+        },
+      ],
+    },
+  ]}
+>
+  <EmojiText>:partyparrot:</EmojiText>
+</EmojiProvider>
+```
+
+Custom emojis render as `<img>` elements. If a custom emoji shares the same ID as a built-in emoji, the custom emoji takes precedence.
+
+## Custom Emoji Structure
+
+Each custom emoji requires:
+
+| Field      | Type                     | Description                           |
+| ---------- | ------------------------ | ------------------------------------- |
+| `id`       | `string`                 | Unique identifier, used as shortcode  |
+| `name`     | `string`                 | Display name                          |
+| `keywords` | `string[]` _(optional)_  | Search keywords                       |
+| `skins`    | `Array<{ src: string }>` | Image sources (at least one required) |
+
+## Aliasing Custom Emojis
+
+Custom emojis can be referenced by `extraAliases`. Since custom emojis are indexed before aliases are resolved, aliases can point to custom emoji IDs:
+
+```tsx
+<EmojiProvider data={data} customEmojis={customCategories} extraAliases={{ dance: 'partyparrot' }}>
+  <EmojiText>:dance:</EmojiText> {/* renders the partyparrot image */}
+</EmojiProvider>
+```
+
+## Try It
+
+Type any built-in shortcode to see it rendered:
+
+<EmojiPlayground client:load />

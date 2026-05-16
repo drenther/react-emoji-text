@@ -7,11 +7,12 @@
       "inputs": [
         "src/**",
         "tsdown.config.ts",
+        "astro.config.mjs",
         "tsconfig.json",
         "tsconfig.base.json",
         "package.json"
       ],
-      "outputs": ["dist/**", ".tanstack/**", ".output/**", ".vinxi/**"]
+      "outputs": ["dist/**"]
     },
     "test": {
       "inputs": ["src/**", "tests/**", "vitest.config.ts", "tsconfig.json", "package.json"]

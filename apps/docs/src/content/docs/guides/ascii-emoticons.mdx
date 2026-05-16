@@ -1,0 +1,31 @@
+---
+title: ASCII Emoticons
+description: Automatic conversion of ASCII emoticons like :) and <3.
+---
+
+import EmojiPlayground from '../../../components/EmojiPlayground';
+
+## Default Behavior
+
+ASCII emoticons like `:)`, `<3`, `:D`, and `;)` are matched by default. They require whitespace or string boundaries on both sides to avoid false positives inside words.
+
+```tsx
+<EmojiText>hello :)</EmojiText>  {/* :) → emoji */}
+<EmojiText>hello:)</EmojiText>   {/* no match — no boundary */}
+```
+
+## Disabling ASCII
+
+Disable ASCII matching on the provider or per-instance:
+
+```tsx
+<EmojiProvider data={data} ascii={false}>
+  <EmojiText>hello :)</EmojiText> {/* renders as plain text */}
+</EmojiProvider>
+```
+
+## Try It
+
+Toggle the ASCII checkbox to see how emoticons are handled:
+
+<EmojiPlayground client:load ascii={true} />

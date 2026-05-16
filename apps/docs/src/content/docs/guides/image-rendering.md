@@ -1,0 +1,61 @@
+---
+title: Image Rendering
+description: Render emojis as images using URL templates, custom functions, or sprite sheets.
+---
+
+By default, emojis render as native Unicode characters. To render image-based emojis, configure one of the image resolution strategies on the provider or per-instance.
+
+## Image URL Template
+
+Use `{set}`, `{unified}`, and `{skin}` placeholders:
+
+```tsx
+<EmojiProvider data={data} set="apple" imageUrlTemplate="/emoji/{set}/{unified}.png">
+  <EmojiText>:wave:</EmojiText>
+</EmojiProvider>
+```
+
+## Custom Image URL Function
+
+For full control, provide a `getImageUrl` function:
+
+```tsx
+<EmojiProvider
+  data={data}
+  set="apple"
+  getImageUrl={(emoji, context) => `/cdn/${context.set}/${context.unified}.svg`}
+>
+  <EmojiText>:wave:</EmojiText>
+</EmojiProvider>
+```
+
+## Sprite Sheets
+
+Render emojis from a sprite sheet by providing a `sprite` config:
+
+```tsx
+<EmojiText
+  set="apple"
+  sprite={{
+    src: '/emoji-sheet.png',
+    size: 20,
+    columns: 4,
+    sheet: { '1F44B': { x: 1, y: 2 } },
+  }}
+>
+  :wave:
+</EmojiText>
+```
+
+Sprite coordinates are matched case-insensitively. Emojis without coordinates fall back to native rendering.
+
+## Resolution Priority
+
+When multiple image strategies are configured, they resolve in this order:
+
+1. `getImageUrl` (highest priority)
+2. `sprite`
+3. `imageUrlTemplate`
+4. Native Unicode (fallback)
+
+The `emojiClassName` prop is applied to rendered `<img>` and sprite `<span>` elements.

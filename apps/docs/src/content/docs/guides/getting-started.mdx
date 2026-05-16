@@ -1,0 +1,79 @@
+---
+title: Getting Started
+description: Install react-emoji-text and render your first emojis.
+---
+
+import EmojiPlayground from '../../../components/EmojiPlayground';
+
+## Installation
+
+```bash
+pnpm add react-emoji-text @emoji-mart/data
+```
+
+## Quick Start
+
+Wrap your app with `EmojiProvider` and use `EmojiText` to render emoji-enriched text.
+
+```tsx
+import data from '@emoji-mart/data';
+import { EmojiProvider, EmojiText } from 'react-emoji-text/react';
+
+export function Message() {
+  return (
+    <EmojiProvider data={data}>
+      <EmojiText>hello :wave:</EmojiText>
+    </EmojiProvider>
+  );
+}
+```
+
+### Try It
+
+<EmojiPlayground client:load />
+
+## Entry Points
+
+```ts
+import { EmojiProvider, EmojiText } from 'react-emoji-text/react';
+import { tokenize } from 'react-emoji-text/core';
+import Emoji, { toArray } from 'react-emoji-text/compat';
+```
+
+The root entry (`react-emoji-text`) re-exports the core and React APIs. Use the subpath entries when you want the smallest import surface.
+
+## EmojiProvider Props
+
+| Prop               | Type                                                         | Default    | Description                                                   |
+| ------------------ | ------------------------------------------------------------ | ---------- | ------------------------------------------------------------- |
+| `data`             | `EmojiData`                                                  | _required_ | Emoji dataset (e.g. `@emoji-mart/data`)                       |
+| `set`              | `"native" \| "apple" \| "google" \| "twitter" \| "facebook"` | `"native"` | Emoji image set                                               |
+| `defaultSkin`      | `1 \| 2 \| 3 \| 4 \| 5 \| 6`                                 | —          | Default skin tone applied to all emojis                       |
+| `ascii`            | `boolean`                                                    | `true`     | Match ASCII emoticons like `:)` and `<3`                      |
+| `customEmojis`     | `CustomEmojiCategory[]`                                      | —          | Custom emoji categories                                       |
+| `extraAliases`     | `Record<string, string>`                                     | —          | Additional shortcode mappings                                 |
+| `getImageUrl`      | `(emoji, context) => string`                                 | —          | Custom image URL resolver                                     |
+| `imageUrlTemplate` | `string`                                                     | —          | URL template with `{set}`, `{unified}`, `{skin}` placeholders |
+| `sprite`           | `SpriteConfig`                                               | —          | Sprite sheet configuration                                    |
+
+## EmojiText Props
+
+All `EmojiProvider` props except `data` can be overridden per-instance on `EmojiText`.
+
+| Prop                 | Type                          | Default  | Description                                                    |
+| -------------------- | ----------------------------- | -------- | -------------------------------------------------------------- |
+| `children`           | `string`                      | —        | Source text (mutually exclusive with `text`)                   |
+| `text`               | `string`                      | —        | Source text (use when `children` contains slots)               |
+| `as`                 | `keyof HTMLElementTagNameMap` | `"span"` | Wrapper element tag                                            |
+| `className`          | `string`                      | —        | Class on the wrapper element                                   |
+| `emojiClassName`     | `string`                      | —        | Class applied to individual emoji images                       |
+| `onlyEmojiClassName` | `string`                      | —        | Class applied to the wrapper when content contains only emojis |
+| `ref`                | `Ref<HTMLElement>`            | —        | Forwarded ref to the wrapper element                           |
+
+Any additional HTML attributes are forwarded to the wrapper element.
+
+```tsx
+<EmojiText as="p" className="message" data-testid="msg" title="Greeting">
+  hello :wave:
+</EmojiText>
+```

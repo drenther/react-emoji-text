@@ -7,7 +7,7 @@ A modern React renderer that converts plain text into rendered emojis, backed by
 pnpm monorepo with two workspace members:
 
 - `packages/react-emoji-text` — the published npm package
-- `apps/docs` — Fumadocs documentation site (TanStack Start)
+- `apps/docs` — Astro Starlight documentation site (with interactive React examples)
 
 ## Commands
 

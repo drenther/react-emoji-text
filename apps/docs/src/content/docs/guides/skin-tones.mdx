@@ -1,0 +1,34 @@
+---
+title: Skin Tones
+description: Configure default skin tones and use shortcode suffixes.
+---
+
+import SkinTonePlayground from '../../../components/SkinTonePlayground';
+
+## Try It
+
+<SkinTonePlayground client:load />
+
+## Default Skin Tone
+
+Set a default skin tone on the provider or per-instance. Values range from `1` (default yellow) to `6`.
+
+```tsx
+<EmojiProvider data={data} defaultSkin={3}>
+  <EmojiText>:wave:</EmojiText> {/* renders 👋🏼 */}
+</EmojiProvider>
+```
+
+## Shortcode Skin Tone Suffix
+
+Append `:skin-tone-N:` to a shortcode to override the skin tone for that emoji:
+
+```tsx
+<EmojiText>:wave::skin-tone-5:</EmojiText> {/* renders 👋🏾 */}
+```
+
+The skin tone suffix is consumed as part of the match — it won't appear in the rendered output.
+
+## Unicode Preservation
+
+Unicode skin tone modifiers embedded in the source text are always preserved. If the input already contains a skin-toned emoji like `👋🏾`, the library detects and keeps the original modifier regardless of the `defaultSkin` setting.

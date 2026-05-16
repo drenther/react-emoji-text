@@ -1,0 +1,41 @@
+---
+title: react-emoji-text
+description: A modern React renderer that converts plain text into rendered emojis.
+template: splash
+hero:
+  tagline: A modern React 19 renderer that converts plain text into rendered emojis, backed by @emoji-mart/data.
+  actions:
+    - text: Getting Started
+      link: /react-emoji-text/guides/getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/drenther/react-emoji-text
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid>
+  <Card title="Shortcodes" icon="pencil">
+    Render `:wave:` as 👋 automatically.
+  </Card>
+  <Card title="Custom Emojis" icon="add-document">
+    Register your own emojis with custom images.
+  </Card>
+  <Card title="Image Sets" icon="setting">
+    Native, Apple, Google, Twitter, or Facebook emoji styles.
+  </Card>
+  <Card title="Drop-in Compat" icon="approve-check">
+    Migrate from{' '}
+    <a
+      href="https://github.com/tommoor/react-emoji-render"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      `react-emoji-render`
+    </a>{' '}
+    with zero changes.
+  </Card>
+</CardGrid>
