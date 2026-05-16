@@ -271,6 +271,15 @@ When multiple sources define the same shortcode, the last writer wins. Resolutio
 
 This means an `extraAliases` entry with the same key as a custom emoji ID will override that custom emoji's shortcode. This is intentional — `extraAliases` acts as the highest-priority override.
 
+## Emoji Pickers
+
+If your app also needs an emoji picker, these pair naturally with each data source:
+
+- **@emoji-mart/data** → [emoji-mart](https://github.com/missive/emoji-mart) by Missive — a full-featured picker that shares the same dataset
+- **emojibase** → [frimousse](https://github.com/liveblocks/frimousse) by Liveblocks — a lightweight, headless picker built on emojibase
+
+Using the same data source for both rendering and picking means zero duplication in your bundle.
+
 ## Core API
 
 The `tokenize` function is framework-agnostic and can be used without React.

@@ -78,6 +78,15 @@ import EmojiPlayground from '../../../components/EmojiPlayground';
 >
 > These examples are in `emojibase-data@17` but not in the `@emoji-mart/data` set, so they stay as plain text with the emoji-mart adapter and render with emojibase.
 
+## Emoji Pickers
+
+If your app also needs an emoji picker, these pair naturally with each data source:
+
+- **@emoji-mart/data** → [emoji-mart](https://github.com/missive/emoji-mart) by Missive — a full-featured picker that shares the same dataset
+- **emojibase** → [frimousse](https://github.com/liveblocks/frimousse) by Liveblocks — a lightweight, headless picker built on emojibase
+
+Using the same data source for both rendering and picking means zero duplication in your bundle.
+
 ## Using the Compact Format
 
 Emojibase offers a compact format that reduces bundle size by ~40%:
