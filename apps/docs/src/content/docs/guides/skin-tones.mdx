@@ -3,6 +3,7 @@ title: Skin Tones
 description: Configure default skin tones and use shortcode suffixes.
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 import SkinTonePlayground from '../../../components/SkinTonePlayground';
 
 ## Try It
@@ -13,11 +14,35 @@ import SkinTonePlayground from '../../../components/SkinTonePlayground';
 
 Set a default skin tone on the provider or per-instance. Values range from `1` (default yellow) to `6`.
 
-```tsx
-<EmojiProvider data={data} defaultSkin={3}>
-  <EmojiText>:wave:</EmojiText> {/* renders 👋🏼 */}
-</EmojiProvider>
-```
+<Tabs>
+  <TabItem label="@emoji-mart/data">
+    ```tsx
+    import emojiMartData from '@emoji-mart/data';
+    import { fromEmojiMart } from 'react-emoji-text/adapters/emoji-mart';
+
+    const data = fromEmojiMart(emojiMartData);
+
+    <EmojiProvider data={data} defaultSkin={3}>
+      <EmojiText>:wave:</EmojiText> {/* renders 👋🏼 */}
+    </EmojiProvider>
+    ```
+
+  </TabItem>
+  <TabItem label="emojibase">
+    ```tsx
+    import emojis from 'emojibase-data/en/data.json';
+    import shortcodes from 'emojibase-data/en/shortcodes/emojibase.json';
+    import { fromEmojibase } from 'react-emoji-text/adapters/emojibase';
+
+    const data = fromEmojibase(emojis, { shortcodes });
+
+    <EmojiProvider data={data} defaultSkin={3}>
+      <EmojiText>:wave:</EmojiText> {/* renders 👋🏼 */}
+    </EmojiProvider>
+    ```
+
+  </TabItem>
+</Tabs>
 
 ## Shortcode Skin Tone Suffix
 

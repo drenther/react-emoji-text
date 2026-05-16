@@ -6,6 +6,8 @@ export default defineConfig({
     core: 'src/core/index.ts',
     'react/index': 'src/react/index.ts',
     'compat/index': 'src/compat/index.tsx',
+    'adapters/emoji-mart': 'src/adapters/emoji-mart.ts',
+    'adapters/emojibase': 'src/adapters/emojibase.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,
@@ -15,6 +17,6 @@ export default defineConfig({
   outputOptions: (options, format) =>
     format === 'cjs' ? { ...options, exports: 'named' } : options,
   deps: {
-    neverBundle: ['react', 'react-dom', '@emoji-mart/data'],
+    neverBundle: ['react', 'react-dom', '@emoji-mart/data', 'emojibase-data'],
   },
 });

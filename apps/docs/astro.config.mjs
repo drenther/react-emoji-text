@@ -23,6 +23,7 @@ export default defineConfig({
           label: 'Guides',
           items: [
             { slug: 'guides/getting-started' },
+            { slug: 'guides/data-sources' },
             { slug: 'guides/custom-rendering' },
             { slug: 'guides/image-rendering' },
             { slug: 'guides/skin-tones' },

@@ -13,6 +13,7 @@
     "@astrojs/starlight": "0.38.4",
     "@emoji-mart/data": "catalog:",
     "astro": "6.2.1",
+    "emojibase-data": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-emoji-text": "workspace:*"

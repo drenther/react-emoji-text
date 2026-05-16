@@ -1,0 +1,110 @@
+---
+title: Data Sources
+description: Choose between @emoji-mart/data and emojibase as your emoji dataset.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import EmojiPlayground from '../../../components/EmojiPlayground';
+import EmojibasePlayground from '../../../components/EmojibasePlayground';
+
+`react-emoji-text` supports two emoji data sources via adapter functions. Install whichever you prefer and pass the adapted data to `EmojiProvider`.
+
+## Installation
+
+<Tabs>
+  <TabItem label="@emoji-mart/data">```bash pnpm add react-emoji-text @emoji-mart/data ```</TabItem>
+  <TabItem label="emojibase">```bash pnpm add react-emoji-text emojibase-data ```</TabItem>
+</Tabs>
+
+## Setup
+
+<Tabs>
+  <TabItem label="@emoji-mart/data">
+    ```tsx
+    import emojiMartData from '@emoji-mart/data';
+    import { fromEmojiMart } from 'react-emoji-text/adapters/emoji-mart';
+    import { EmojiProvider, EmojiText } from 'react-emoji-text/react';
+
+    const data = fromEmojiMart(emojiMartData);
+
+    export function Message() {
+      return (
+        <EmojiProvider data={data}>
+          <EmojiText>hello :wave:</EmojiText>
+        </EmojiProvider>
+      );
+    }
+    ```
+
+  </TabItem>
+  <TabItem label="emojibase">
+    ```tsx
+    import emojis from 'emojibase-data/en/data.json';
+    import shortcodes from 'emojibase-data/en/shortcodes/emojibase.json';
+    import { fromEmojibase } from 'react-emoji-text/adapters/emojibase';
+    import { EmojiProvider, EmojiText } from 'react-emoji-text/react';
+
+    const data = fromEmojibase(emojis, { shortcodes });
+
+    export function Message() {
+      return (
+        <EmojiProvider data={data}>
+          <EmojiText>hello :wave:</EmojiText>
+        </EmojiProvider>
+      );
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Comparison
+
+|                        | @emoji-mart/data     | emojibase                            |
+| ---------------------- | -------------------- | ------------------------------------ |
+| **Unicode version**    | Unicode 14           | Unicode 17                           |
+| **Localization**       | Limited              | 27 languages via CLDR                |
+| **Maintenance**        | Community maintained | Actively maintained                  |
+| **Format**             | Single JSON import   | Data + shortcodes (separate imports) |
+| **Compact format**     | No                   | Yes (`compact.json` ~40% smaller)    |
+| **Emoticons built-in** | Via aliases          | Via `emoticon` field                 |
+
+## Live Examples
+
+### @emoji-mart/data
+
+<EmojiPlayground client:load />
+
+### emojibase
+
+<EmojibasePlayground client:load />
+
+## Using the Compact Format
+
+Emojibase offers a compact format that reduces bundle size by ~40%:
+
+```tsx
+import emojis from 'emojibase-data/en/compact.json';
+import shortcodes from 'emojibase-data/en/shortcodes/emojibase.json';
+import { fromEmojibase } from 'react-emoji-text/adapters/emojibase';
+
+const data = fromEmojibase(emojis, { shortcodes });
+```
+
+The adapter auto-detects whether you pass full or compact data.
+
+## Localization with Emojibase
+
+Emojibase supports 27 languages. Swap the locale in the import path:
+
+```tsx
+import emojis from 'emojibase-data/ja/data.json';
+import shortcodes from 'emojibase-data/ja/shortcodes/emojibase.json';
+import { fromEmojibase } from 'react-emoji-text/adapters/emojibase';
+
+const data = fromEmojibase(emojis, { shortcodes });
+```
+
+## Compat Layer
+
+The `react-emoji-text/compat` entry point (drop-in replacement for `react-emoji-render`) requires `@emoji-mart/data` — it cannot be used with emojibase.
