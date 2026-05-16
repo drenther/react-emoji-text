@@ -1,6 +1,6 @@
 {
   "name": "react-emoji-text",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.0",
   "description": "A modern React renderer that converts plain text into rendered emojis, backed by @emoji-mart/data",
   "keywords": [
     "emoji",
