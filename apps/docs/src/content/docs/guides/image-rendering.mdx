@@ -3,7 +3,7 @@ title: Image Rendering
 description: Render emojis as images using URL templates, custom functions, or sprite sheets.
 ---
 
-import EmojiPlayground from '../../../components/EmojiPlayground';
+import ImageRenderingPlayground from '../../../components/ImageRenderingPlayground';
 
 By default, emojis render as native Unicode characters. To render image-based emojis, configure one of the image resolution strategies on the provider or per-instance.
 
@@ -12,9 +12,11 @@ By default, emojis render as native Unicode characters. To render image-based em
 Use `{set}`, `{unified}`, and `{skin}` placeholders:
 
 ```tsx
-<EmojiProvider data={data} set="apple" imageUrlTemplate="/emoji/{set}/{unified}.png">
-  <EmojiText>:wave:</EmojiText>
-</EmojiProvider>
+const emojiAssetBase = `${import.meta.env.BASE_URL}example-emoji`;
+
+<EmojiProvider data={data} set="apple" imageUrlTemplate={`${emojiAssetBase}/singles/{unified}.png`}>
+  <EmojiText>:wave: :heart: :sparkles:</EmojiText>
+</EmojiProvider>;
 ```
 
 ## Custom Image URL Function
@@ -25,9 +27,9 @@ For full control, provide a `getImageUrl` function:
 <EmojiProvider
   data={data}
   set="apple"
-  getImageUrl={(emoji, context) => `/cdn/${context.set}/${context.unified}.svg`}
+  getImageUrl={(_emoji, context) => `${emojiAssetBase}/singles/${context.unified}.png`}
 >
-  <EmojiText>:wave:</EmojiText>
+  <EmojiText>:wave: :heart: :sparkles:</EmojiText>
 </EmojiProvider>
 ```
 
@@ -39,13 +41,18 @@ Render emojis from a sprite sheet by providing a `sprite` config:
 <EmojiText
   set="apple"
   sprite={{
-    src: '/emoji-sheet.png',
-    size: 20,
-    columns: 4,
-    sheet: { '1F44B': { x: 1, y: 2 } },
+    src: `${emojiAssetBase}/sprite-2x2.png`,
+    size: 24,
+    columns: 2,
+    sheet: {
+      '1f44b': { x: 0, y: 0 },
+      '2764-fe0f': { x: 1, y: 0 },
+      '2728': { x: 0, y: 1 },
+      '1f600': { x: 1, y: 1 },
+    },
   }}
 >
-  :wave:
+  :wave: :heart: :sparkles: :grinning:
 </EmojiText>
 ```
 
@@ -64,6 +71,8 @@ The `emojiClassName` prop is applied to rendered `<img>` and sprite `<span>` ele
 
 ## Try It
 
-Without image configuration, emojis render as native Unicode (the default fallback):
+These examples use docs-local PNG assets for standalone image URLs and a 2x2 sprite sheet:
 
-<EmojiPlayground client:load />
+<ImageRenderingPlayground client:load />
+
+> Want to inspect the demo asset structure? Download the [sample asset bundle](../../example-emoji-assets.zip), or open the [sprite sheet](../../example-emoji/sprite-2x2.png) directly. The bundle contains `example-emoji/singles/` PNGs keyed by unified codepoint plus `example-emoji/sprite-2x2.png`.
