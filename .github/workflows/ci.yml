@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -36,3 +37,43 @@ jobs:
       - run: pnpm run test
       - run: pnpm run test:coverage
       - run: pnpm run build
+
+      - name: Post coverage comment
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          COMMENT_MARKER="<!-- react-emoji-text-coverage -->"
+          BODY="$COMMENT_MARKER
+          ## Coverage Report
+
+          | Package | Statements | Branches | Functions | Lines |
+          |---------|------------|----------|-----------|-------|"
+
+          for pkg in packages/react-emoji-text; do
+            SUMMARY="$pkg/coverage/coverage-summary.json"
+            if [ ! -f "$SUMMARY" ]; then
+              continue
+            fi
+
+            METRICS=$(jq -r '.total | "\(.statements.pct)% | \(.branches.pct)% | \(.functions.pct)% | \(.lines.pct)%"' "$SUMMARY")
+            PKG_NAME=$(jq -r '.name' "$pkg/package.json")
+            BODY="$BODY
+          | \`$PKG_NAME\` | $METRICS |"
+          done
+
+          BODY="$BODY
+
+          *Updated by CI - $(date -u '+%Y-%m-%d %H:%M UTC')*"
+
+          EXISTING=$(gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+            --jq "map(select(.body | startswith(\"$COMMENT_MARKER\"))) | .[0].id // empty")
+
+          if [ -n "$EXISTING" ]; then
+            gh api "repos/${{ github.repository }}/issues/comments/${EXISTING}" \
+              -X PATCH -f body="$BODY"
+          else
+            gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+              -X POST -f body="$BODY"
+          fi
