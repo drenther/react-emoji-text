@@ -3,6 +3,8 @@ title: Image Rendering
 description: Render emojis as images using URL templates, custom functions, or sprite sheets.
 ---
 
+import EmojiPlayground from '../../../components/EmojiPlayground';
+
 By default, emojis render as native Unicode characters. To render image-based emojis, configure one of the image resolution strategies on the provider or per-instance.
 
 ## Image URL Template
@@ -59,3 +61,9 @@ When multiple image strategies are configured, they resolve in this order:
 4. Native Unicode (fallback)
 
 The `emojiClassName` prop is applied to rendered `<img>` and sprite `<span>` elements.
+
+## Try It
+
+Without image configuration, emojis render as native Unicode (the default fallback):
+
+<EmojiPlayground client:load />

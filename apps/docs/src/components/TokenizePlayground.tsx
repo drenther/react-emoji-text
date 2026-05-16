@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import emojiMartData from '@emoji-mart/data';
 import emojis from 'emojibase-data/en/data.json';
 import shortcodes from 'emojibase-data/en/shortcodes/emojibase.json';
-import type { EmojiData, SkinTone } from 'react-emoji-text/core';
+import type { EmojiData, Token } from 'react-emoji-text/core';
+import { tokenize } from 'react-emoji-text/core';
+import { fromEmojiMart } from 'react-emoji-text/adapters/emoji-mart';
 import { fromEmojibase } from 'react-emoji-text/adapters/emojibase';
-import { EmojiProvider, EmojiText } from 'react-emoji-text/react';
 
 type Adapter = 'emoji-mart' | 'emojibase';
 
-const emojiMartEmojiData = emojiMartData as unknown as EmojiData;
+const emojiMartEmojiData = fromEmojiMart(emojiMartData as unknown as EmojiData);
 const emojibaseEmojiData: EmojiData = fromEmojibase(emojis, { shortcodes });
 
 const ADAPTERS: { value: Adapter; label: string }[] = [
@@ -16,14 +17,31 @@ const ADAPTERS: { value: Adapter; label: string }[] = [
   { value: 'emojibase', label: 'emojibase' },
 ];
 
-const SKIN_LABELS = ['Default', 'Light', 'Med-Light', 'Medium', 'Med-Dark', 'Dark'] as const;
+function simplifyTokens(tokens: Token[]) {
+  return tokens.map((token) => {
+    if (token.type === 'emoji') {
+      return {
+        type: token.type,
+        native: token.native,
+        shortcode: token.shortcode,
+        match: token.match,
+        source: token.source,
+        ...(token.skin ? { skin: token.skin } : {}),
+      };
+    }
+    return token;
+  });
+}
 
-export default function SkinTonePlayground() {
+export default function TokenizePlayground() {
   const [adapter, setAdapter] = useState<Adapter>('emoji-mart');
-  const [text, setText] = useState(':wave: :thumbsup: :clap:');
-  const [skinTone, setSkinTone] = useState<SkinTone>(1);
+  const [text, setText] = useState('hello :wave: world :) :missing:');
+  const [ascii, setAscii] = useState(true);
 
   const data = adapter === 'emoji-mart' ? emojiMartEmojiData : emojibaseEmojiData;
+
+  const tokens = useMemo(() => tokenize(text, { data, ascii }), [text, data, ascii]);
+  const displayTokens = simplifyTokens(tokens);
 
   return (
     <div style={styles.container}>
@@ -39,6 +57,14 @@ export default function SkinTonePlayground() {
             </button>
           ))}
         </div>
+        <label style={styles.checkbox}>
+          <input
+            type="checkbox"
+            checked={ascii}
+            onChange={(event) => setAscii(event.target.checked)}
+          />
+          ASCII
+        </label>
       </div>
       <input
         type="text"
@@ -46,25 +72,7 @@ export default function SkinTonePlayground() {
         onChange={(event) => setText(event.target.value)}
         style={styles.input}
       />
-      <div>
-        <label style={styles.label}>Skin tone</label>
-        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-          {([1, 2, 3, 4, 5, 6] as const).map((tone) => (
-            <button
-              key={tone}
-              onClick={() => setSkinTone(tone)}
-              style={skinTone === tone ? styles.segmentedActive : styles.segmentedInactive}
-            >
-              {SKIN_LABELS[tone - 1]}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div style={styles.output}>
-        <EmojiProvider key={adapter} data={data} defaultSkin={skinTone}>
-          <EmojiText>{text}</EmojiText>
-        </EmojiProvider>
-      </div>
+      <pre style={styles.pre}>{JSON.stringify(displayTokens, null, 2)}</pre>
     </div>
   );
 }
@@ -118,11 +126,12 @@ const styles = {
     color: 'var(--sl-color-gray-2)',
     fontWeight: 400,
   } satisfies React.CSSProperties,
-  label: {
-    display: 'block',
-    marginBottom: '4px',
-    fontSize: '12px',
-    fontWeight: 500,
+  checkbox: {
+    fontSize: '13px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
     color: 'var(--sl-color-gray-2)',
   } satisfies React.CSSProperties,
   input: {
@@ -135,10 +144,13 @@ const styles = {
     color: 'var(--sl-color-text)',
     boxSizing: 'border-box',
   } satisfies React.CSSProperties,
-  output: {
+  pre: {
     padding: '10px 12px',
     background: 'var(--sl-color-gray-7)',
     borderRadius: '6px',
-    fontSize: '24px',
+    fontSize: '12px',
+    overflow: 'auto',
+    maxHeight: '400px',
+    margin: 0,
   } satisfies React.CSSProperties,
 };

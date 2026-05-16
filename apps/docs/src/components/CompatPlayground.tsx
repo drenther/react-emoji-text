@@ -2,13 +2,14 @@ import { useState } from 'react';
 import emojiMartData from '@emoji-mart/data';
 import emojis from 'emojibase-data/en/data.json';
 import shortcodes from 'emojibase-data/en/shortcodes/emojibase.json';
-import type { EmojiData, SkinTone } from 'react-emoji-text/core';
+import type { EmojiData } from 'react-emoji-text/core';
+import { fromEmojiMart } from 'react-emoji-text/adapters/emoji-mart';
 import { fromEmojibase } from 'react-emoji-text/adapters/emojibase';
-import { EmojiProvider, EmojiText } from 'react-emoji-text/react';
+import Emoji from 'react-emoji-text/compat';
 
 type Adapter = 'emoji-mart' | 'emojibase';
 
-const emojiMartEmojiData = emojiMartData as unknown as EmojiData;
+const emojiMartEmojiData = fromEmojiMart(emojiMartData as unknown as EmojiData);
 const emojibaseEmojiData: EmojiData = fromEmojibase(emojis, { shortcodes });
 
 const ADAPTERS: { value: Adapter; label: string }[] = [
@@ -16,12 +17,9 @@ const ADAPTERS: { value: Adapter; label: string }[] = [
   { value: 'emojibase', label: 'emojibase' },
 ];
 
-const SKIN_LABELS = ['Default', 'Light', 'Med-Light', 'Medium', 'Med-Dark', 'Dark'] as const;
-
-export default function SkinTonePlayground() {
+export default function CompatPlayground() {
   const [adapter, setAdapter] = useState<Adapter>('emoji-mart');
-  const [text, setText] = useState(':wave: :thumbsup: :clap:');
-  const [skinTone, setSkinTone] = useState<SkinTone>(1);
+  const [text, setText] = useState('hello :wave: world :heart:');
 
   const data = adapter === 'emoji-mart' ? emojiMartEmojiData : emojibaseEmojiData;
 
@@ -46,24 +44,8 @@ export default function SkinTonePlayground() {
         onChange={(event) => setText(event.target.value)}
         style={styles.input}
       />
-      <div>
-        <label style={styles.label}>Skin tone</label>
-        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-          {([1, 2, 3, 4, 5, 6] as const).map((tone) => (
-            <button
-              key={tone}
-              onClick={() => setSkinTone(tone)}
-              style={skinTone === tone ? styles.segmentedActive : styles.segmentedInactive}
-            >
-              {SKIN_LABELS[tone - 1]}
-            </button>
-          ))}
-        </div>
-      </div>
       <div style={styles.output}>
-        <EmojiProvider key={adapter} data={data} defaultSkin={skinTone}>
-          <EmojiText>{text}</EmojiText>
-        </EmojiProvider>
+        <Emoji key={adapter} text={text} options={{ data }} />
       </div>
     </div>
   );
@@ -118,13 +100,6 @@ const styles = {
     color: 'var(--sl-color-gray-2)',
     fontWeight: 400,
   } satisfies React.CSSProperties,
-  label: {
-    display: 'block',
-    marginBottom: '4px',
-    fontSize: '12px',
-    fontWeight: 500,
-    color: 'var(--sl-color-gray-2)',
-  } satisfies React.CSSProperties,
   input: {
     width: '100%',
     padding: '8px 10px',
@@ -139,6 +114,6 @@ const styles = {
     padding: '10px 12px',
     background: 'var(--sl-color-gray-7)',
     borderRadius: '6px',
-    fontSize: '24px',
+    fontSize: '18px',
   } satisfies React.CSSProperties,
 };

@@ -3,6 +3,8 @@ title: Custom Rendering
 description: Customize how emojis and unknown shortcodes are rendered.
 ---
 
+import CustomRenderingPlayground from '../../../components/CustomRenderingPlayground';
+
 ## Compound Slots
 
 Customize token rendering with compound slots. Use `text` for the source string when `children` contains slots.
@@ -48,6 +50,12 @@ function CustomRenderer({ text }: { text: string }) {
 ```
 
 The `useTokens` hook must be used inside an `EmojiProvider`. It accepts optional overrides for all tokenize options, falling back to the provider's configuration.
+
+## Try It
+
+Emojis render bold with a highlight. Unknown shortcodes render as inline code:
+
+<CustomRenderingPlayground client:load />
 
 ## Only-Emoji Detection
 
