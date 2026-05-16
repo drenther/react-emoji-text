@@ -9,6 +9,8 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'react-emoji-text',
+      logo: { src: './public/favicon.svg', replacesTitle: false },
+      favicon: '/favicon.svg',
       social: [
         {
           icon: 'github',

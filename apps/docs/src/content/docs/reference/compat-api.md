@@ -3,7 +3,7 @@ title: Compat API
 description: Drop-in replacement for react-emoji-render.
 ---
 
-A drop-in replacement for <a href="https://github.com/tommoor/react-emoji-render" target="_blank" rel="noopener noreferrer">react-emoji-render</a>. Bundles `@emoji-mart/data` so no provider is needed.
+A drop-in replacement for <a href="https://github.com/tommoor/react-emoji-render" target="_blank" rel="noopener noreferrer">react-emoji-render</a>. Bundles <a href="https://github.com/missive/emoji-mart" target="_blank" rel="noopener noreferrer">@emoji-mart/data</a> so no provider is needed.
 
 ## Emoji Component
 
@@ -46,8 +46,8 @@ Accepts the same `CompatOptions` as the `Emoji` component's `options` prop.
 
 ## Divergences from <a href="https://github.com/tommoor/react-emoji-render" target="_blank" rel="noopener noreferrer">react-emoji-render</a>
 
-- **Data source**: Uses `@emoji-mart/data` instead of the legacy dataset. More emojis, more accurate shortcodes.
+- **Data source**: Uses <a href="https://github.com/missive/emoji-mart" target="_blank" rel="noopener noreferrer">@emoji-mart/data</a> instead of the legacy dataset. More emojis, more accurate shortcodes.
 - **Skin tones**: Supported via `defaultSkin` option (not available in the original).
 - **ASCII matching**: Uses boundary-aware matching to avoid false positives in URLs and code.
-- **No EmojiProvider required**: Compat imports `@emoji-mart/data` directly.
+- **No EmojiProvider required**: Compat imports <a href="https://github.com/missive/emoji-mart" target="_blank" rel="noopener noreferrer">@emoji-mart/data</a> directly.
 - **`svg` prop**: Accepted for migration compatibility. It selects an image set, but callers still provide assets through `options.getImageUrl`, `options.imageUrlTemplate`, or `options.sprite`. This package does not host or bundle emoji images.
